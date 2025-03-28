@@ -97,3 +97,33 @@ Usando la l'API https://boolean-spec-frontend.vercel.app/freetestapi/books/{id} 
 Testala con l’array [2, 13, 7, 21, 19] .
 */
 
+async function fetchJson(url){
+  const response = await fetch(url)
+  const obj = await response.json();
+  return obj
+}
+
+async function getBooks(ids){
+  try{
+    console.log(`Caricando i dati...`);
+    const promises = ids.map(id => fetchJson(`https://boolean-spec-frontend.vercel.app/freetestapi/books/${id}`)) 
+
+    const books = await Promise.all(promises)
+
+    return books
+  }
+  catch{
+    throw new Error("Errore nel recupero dei dati: " + error.message);
+  }
+}
+
+(async () => {
+  const ids = [2, 13, 7, 21, 19];
+  try {
+    const books = await getBooks(ids);
+    console.log("Libri recuperati:", books);
+  } catch (error) {
+    console.error(error.message);
+  }
+})();
+
